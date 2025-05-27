@@ -34,7 +34,6 @@
       height: 60px;
     }
 
-    /* 手機版排版優化 */
     @media (max-width: 600px) {
       table, thead, tbody, th, td, tr {
         display: block;
@@ -82,6 +81,14 @@
       const wb = XLSX.utils.book_new();
       const ws_data = [];
 
+      const name = table.rows[0].cells[1].innerText.trim();
+      const leaveDate = table.rows[2].cells[1].innerText.trim();
+
+      if (!name || !leaveDate) {
+        alert("請填寫『姓名』與『請假時間』後再下載！");
+        return;
+      }
+
       for (const row of table.rows) {
         const rowData = [];
         for (const cell of row.cells) {
@@ -100,7 +107,10 @@
 
       const ws = XLSX.utils.aoa_to_sheet(ws_data);
       XLSX.utils.book_append_sheet(wb, ws, "請假單");
-      XLSX.writeFile(wb, "請假申請表.xlsx");
+
+      const today = new Date().toISOString().split('T')[0];
+      const fileName = `請假申請_${name}_${today}.xlsx`;
+      XLSX.writeFile(wb, fileName);
     }
   </script>
 </body>
