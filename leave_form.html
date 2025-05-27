@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>請假單</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 40px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #999;
+      padding: 10px;
+      text-align: left;
+    }
+    textarea {
+      width: 100%;
+      height: 60px;
+    }
+    .button-container {
+      margin-top: 20px;
+    }
+    .signature {
+      height: 60px;
+    }
+  </style>
+</head>
+<body>
+  <h1>請假申請表</h1>
+  <table id="leaveTable">
+    <tr><th>姓名</th><td contenteditable="true"></td></tr>
+    <tr><th>部門</th><td contenteditable="true"></td></tr>
+    <tr><th>請假時間</th><td contenteditable="true"></td></tr>
+    <tr><th>請假類別</th><td contenteditable="true">事假 / 病假 / 年假 / 其他</td></tr>
+    <tr><th>請假理由</th><td><textarea></textarea></td></tr>
+    <tr><th>主管部門意見</th><td><textarea></textarea></td></tr>
+    <tr><th>總經理意見</th><td><textarea></textarea></td></tr>
+    <tr><th>簽名（員工）</th><td class="signature"></td></tr>
+    <tr><th>簽名（主管）</th><td class="signature"></td></tr>
+    <tr><th>簽名（總經理）</th><td class="signature"></td></tr>
+  </table>
+  <div class="button-container">
+    <button onclick="downloadExcel()">下載 Excel</button>
+  </div>
+
+  <script>
+    function downloadExcel() {
+      const table = document.getElementById("leaveTable");
+      const wb = XLSX.utils.book_new();
+      const ws_data = [];
+
+      for (const row of table.rows) {
+        const rowData = [];
+        for (const cell of row.cells) {
+          if (cell.tagName === 'TD') {
+            if (cell.querySelector('textarea')) {
+              rowData.push(cell.querySelector('textarea').value);
+            } else {
+              rowData.push(cell.innerText);
+            }
+          } else {
+            rowData.push(cell.innerText);
+          }
+        }
+        ws_data.push(rowData);
+      }
+
+      const ws = XLSX.utils.aoa_to_sheet(ws_data);
+      XLSX.utils.book_append_sheet(wb, ws, "請假單");
+      XLSX.writeFile(wb, "請假申請表.xlsx");
+    }
+  </script>
+</body>
+</html>
