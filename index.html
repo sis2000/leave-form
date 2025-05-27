@@ -55,6 +55,12 @@
         padding: 10px;
       }
     }
+
+    @media print {
+      .button-container {
+        display: none;
+      }
+    }
   </style>
 </head>
 <body>
@@ -73,6 +79,7 @@
   </table>
   <div class="button-container">
     <button onclick="downloadExcel()">下載 Excel</button>
+    <button onclick="window.print()">列印表單</button>
   </div>
 
   <script>
