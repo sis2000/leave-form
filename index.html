@@ -2,12 +2,16 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>請假單</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     body {
       font-family: sans-serif;
       margin: 40px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
     }
     table {
       border-collapse: collapse;
@@ -24,9 +28,33 @@
     }
     .button-container {
       margin-top: 20px;
+      text-align: center;
     }
     .signature {
       height: 60px;
+    }
+
+    /* 手機版排版優化 */
+    @media (max-width: 600px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+        width: 100%;
+      }
+      th {
+        background: #eee;
+        font-weight: bold;
+        padding: 10px 10px 5px;
+      }
+      td {
+        border: none;
+        border-bottom: 1px solid #ccc;
+        padding: 5px 10px 15px;
+      }
+      tr {
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        padding: 10px;
+      }
     }
   </style>
 </head>
