@@ -66,20 +66,23 @@
 <body>
   <h1>請假申請表</h1>
   <table id="leaveTable">
-    <tr><th>姓名</th><td contenteditable="true"></td></tr>
-    <tr><th>部門</th><td contenteditable="true"></td></tr>
-    <tr><th>請假時間</th><td contenteditable="true"></td></tr>
-    <tr><th>請假類別</th><td contenteditable="true">事假 / 病假 / 年假 / 其他</td></tr>
-    <tr><th>請假理由</th><td><textarea></textarea></td></tr>
-    <tr><th>主管部門意見</th><td><textarea></textarea></td></tr>
-    <tr><th>總經理意見</th><td><textarea></textarea></td></tr>
-    <tr><th>簽名（員工）</th><td class="signature"></td></tr>
-    <tr><th>簽名（主管）</th><td class="signature"></td></tr>
-    <tr><th>簽名（總經理）</th><td class="signature"></td></tr>
+    <tr><th>姓名</th><td contenteditable="true" data-key="name"></td></tr>
+    <tr><th>部門</th><td contenteditable="true" data-key="department"></td></tr>
+    <tr><th>請假時間</th><td contenteditable="true" data-key="date"></td></tr>
+    <tr><th>請假類別</th><td contenteditable="true" data-key="type">事假 / 病假 / 年假 / 其他</td></tr>
+    <tr><th>請假理由</th><td><textarea data-key="reason"></textarea></td></tr>
+    <tr><th>主管部門意見</th><td><textarea data-key="deptOpinion"></textarea></td></tr>
+    <tr><th>總經理意見</th><td><textarea data-key="gmOpinion"></textarea></td></tr>
+    <tr><th>簽名（員工）</th><td class="signature" data-key="empSign"></td></tr>
+    <tr><th>簽名（主管）</th><td class="signature" data-key="mgrSign"></td></tr>
+    <tr><th>簽名（總經理）</th><td class="signature" data-key="gmSign"></td></tr>
   </table>
   <div class="button-container">
     <button onclick="downloadExcel()">下載 Excel</button>
     <button onclick="window.print()">列印表單</button>
+    <button onclick="saveData()">儲存資料</button>
+    <button onclick="loadData()">載入資料</button>
+    <button onclick="clearData()">清除儲存</button>
   </div>
 
   <script>
@@ -118,6 +121,36 @@
       const today = new Date().toISOString().split('T')[0];
       const fileName = `請假申請_${name}_${today}.xlsx`;
       XLSX.writeFile(wb, fileName);
+    }
+
+    function saveData() {
+      const data = {};
+      document.querySelectorAll('[data-key]').forEach(el => {
+        if (el.tagName === 'TEXTAREA') {
+          data[el.dataset.key] = el.value;
+        } else {
+          data[el.dataset.key] = el.innerText;
+        }
+      });
+      localStorage.setItem('leaveForm', JSON.stringify(data));
+      alert('資料已儲存！');
+    }
+
+    function loadData() {
+      const data = JSON.parse(localStorage.getItem('leaveForm') || '{}');
+      document.querySelectorAll('[data-key]').forEach(el => {
+        if (el.tagName === 'TEXTAREA') {
+          el.value = data[el.dataset.key] || '';
+        } else {
+          el.innerText = data[el.dataset.key] || '';
+        }
+      });
+      alert('資料已載入');
+    }
+
+    function clearData() {
+      localStorage.removeItem('leaveForm');
+      alert('本機資料已清除');
     }
   </script>
 </body>
